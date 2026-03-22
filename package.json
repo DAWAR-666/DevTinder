@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/DAWAR-666/DevTinder/issues"
   },
-  "homepage": "https://github.com/DAWAR-666/DevTinder#readme"
+  "homepage": "https://github.com/DAWAR-666/DevTinder#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
 }
