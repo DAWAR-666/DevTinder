@@ -8,6 +8,8 @@ async function main() {
     console.log('Connected successfully to server');
     const db = client.db(dbName);
     const collection = db.collection('user');
+    const findResult = await collection.find({}).toArray();
+console.log('Found documents =>', findResult);
     return 'done.';
 }
 main().then(console.log)
