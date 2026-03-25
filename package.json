@@ -18,7 +18,6 @@
   "homepage": "https://github.com/DAWAR-666/DevTinder#readme",
   "dependencies": {
     "dotenv": "^17.3.1",
-    "express": "^5.2.1",
-    "mongodb": "^7.1.1"
+    "express": "^5.2.1"
   }
 }
