@@ -12,6 +12,14 @@ app.post("/signup",async(req,res)=>{
         return res.status(500).send("Error creating user");
     }
 })
+app.get("/users",async(req,res)=>{
+    try{
+        const users=await User.find({emailId:req.body.emailId});
+        res.send(users);
+    }catch(err){
+        return res.status(500).send("Error fetching users");
+    }
+})
 
 connectdb()
   .then(() => {
