@@ -20,6 +20,15 @@ app.get("/users",async(req,res)=>{
         return res.status(500).send("Error fetching users");
     }
 })
+app.patch("/users/:id",async(req,res)=>{
+    const id=req.params.id
+    try{
+        const user=await User.findByIdAndUpdate(id,req.body);
+        res.send("User updated successfully");
+    }catch(err){
+        return res.status(500).send("Error updating user");
+    }
+})
 
 connectdb()
   .then(() => {
