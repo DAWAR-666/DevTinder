@@ -23,10 +23,10 @@ app.get("/users",async(req,res)=>{
 app.patch("/users/:id",async(req,res)=>{
     const id=req.params.id
     try{
-        const user=await User.findByIdAndUpdate(id,req.body);
+        const user=await User.findByIdAndUpdate(id,req.body,{runValidators:true});
         res.send("User updated successfully");
     }catch(err){
-        return res.status(500).send("Error updating user");
+        return res.status(500).send("Error updating user:"+err.message);
     }
 })
 
