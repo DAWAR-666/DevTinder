@@ -5,10 +5,12 @@ const User = require("./models/user.js");
 const { validateUser } = require("./utils/validate.js");
 app.use(express.json());
 app.post("/signup",async(req,res)=>{
-    const user=new User(req.body);
     try{
         validateUser(req.body);
-        
+        const {emailId,password,firstName,lastName,age,gender}=req.body;
+        const passwordHash=await bcrypt.hash(password,10);
+
+        const user=new User({emailId,password:passwordHash,firstName,lastName,age,gender});
         await user.save();
         res.send("User created successfully");
     }catch(err){
