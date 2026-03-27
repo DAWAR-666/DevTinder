@@ -2,10 +2,13 @@ const express = require("express");
 const app = express();
 const { connectdb } = require("./config/mongodb.js");
 const User = require("./models/user.js");
+const { validateUser } = require("./utils/validate.js");
 app.use(express.json());
 app.post("/signup",async(req,res)=>{
     const user=new User(req.body);
     try{
+        validateUser(req.body);
+        
         await user.save();
         res.send("User created successfully");
     }catch(err){
