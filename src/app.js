@@ -23,6 +23,11 @@ app.get("/users",async(req,res)=>{
 app.patch("/users/:id",async(req,res)=>{
     const id=req.params.id
     try{
+        const allowedUpdates=['firstName','lastName','password','age'];
+        const updates=Object.keys(req.body).every((k)=>allowedUpdates.includes(k));
+        if(!updates){
+            throw new Error('Invalid updates! Allowed fields: '+allowedUpdates.join(', '));
+        }
         const user=await User.findByIdAndUpdate(id,req.body,{runValidators:true});
         res.send("User updated successfully");
     }catch(err){
