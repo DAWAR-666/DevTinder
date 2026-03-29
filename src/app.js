@@ -6,6 +6,8 @@ const { validateUser } = require("./utils/validate.js");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const {userAuth}=require('./middleware/auth')
+
 
 app.use(cookieParser());
 app.use(express.json());
@@ -63,17 +65,12 @@ app.patch("/users/:id",async(req,res)=>{
         return res.status(500).send("Error updating user:"+err.message);
     }
 })
-app.get("/profile",async(req,res)=>{
+app.get("/profile",userAuth,async(req,res)=>{
     try{
-        const {token}=req.cookies;
-        if(!token){
-            throw new Error("Unauthorized");
-        }
-        const decodedToken=jwt.verify(token,process.env.JWT_SECRET);
-        const user=await User.findById(decodedToken._id);
+        const user=req.user
         res.send(user);
     }catch(err){
-        return res.status(401).send("Unauthorized: "+err.message);
+        return res.status(400).send("Unauthorized: "+err.message);
     }
 })
 connectdb()
