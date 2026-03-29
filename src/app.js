@@ -5,6 +5,8 @@ const User = require("./models/user.js");
 const { validateUser } = require("./utils/validate.js");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
+
 app.use(cookieParser());
 app.use(express.json());
 app.post("/signup",async(req,res)=>{
@@ -32,7 +34,7 @@ app.post("/login",async(req,res)=>{
             return res.status(400).send("Invalid email or password");
         }
         
-        const token='qwerthfjsodnabcgnahrmsoieilcfme'
+        const token=jwt.sign({_id:user._id},process.env.JWT_SECRET);
         res.cookie("token",token);
         res.send("Login successful");
     }catch(err){
@@ -62,9 +64,17 @@ app.patch("/users/:id",async(req,res)=>{
     }
 })
 app.get("/profile",async(req,res)=>{
-    const cookie=req.cookies.token;
-    console.log(cookie);
-    res.send("User profile");
+    try{
+        const {token}=req.cookies;
+        if(!token){
+            throw new Error("Unauthorized");
+        }
+        const decodedToken=jwt.verify(token,process.env.JWT_SECRET);
+        const user=await User.findById(decodedToken._id);
+        res.send(user);
+    }catch(err){
+        return res.status(401).send("Unauthorized: "+err.message);
+    }
 })
 connectdb()
   .then(() => {
