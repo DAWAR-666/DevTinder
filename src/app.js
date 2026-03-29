@@ -4,9 +4,10 @@ const { connectdb } = require("./config/mongodb.js");
 const User = require("./models/user.js");
 const { validateUser } = require("./utils/validate.js");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 app.use(express.json());
 app.post("/signup",async(req,res)=>{
-    const token='qwerthfjsodnabcgnahrmsoieilcfme'
     try{
         validateUser(req.body);
         const {emailId,password,firstName,lastName,age,gender}=req.body;
@@ -14,7 +15,6 @@ app.post("/signup",async(req,res)=>{
 
         const user=new User({emailId,password:passwordHash,firstName,lastName,age,gender});
         await user.save();
-        res.cookie("token",token);
         res.send("User created successfully");
     }catch(err){
         return res.status(500).send("Error creating user "+err.message);
@@ -31,6 +31,9 @@ app.post("/login",async(req,res)=>{
         if(!isMatch){
             return res.status(400).send("Invalid email or password");
         }
+        
+        const token='qwerthfjsodnabcgnahrmsoieilcfme'
+        res.cookie("token",token);
         res.send("Login successful");
     }catch(err){
         return res.status(500).send("Error logging in user");
@@ -58,7 +61,11 @@ app.patch("/users/:id",async(req,res)=>{
         return res.status(500).send("Error updating user:"+err.message);
     }
 })
-
+app.get("/profile",async(req,res)=>{
+    const cookie=req.cookies.token;
+    console.log(cookie);
+    res.send("User profile");
+})
 connectdb()
   .then(() => {
     console.log("Connected to MongoDB");
