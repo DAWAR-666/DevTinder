@@ -20,6 +20,22 @@ app.post("/signup",async(req,res)=>{
         return res.status(500).send("Error creating user "+err.message);
     }
 })
+app.post("/login",async(req,res)=>{
+    try{
+        const {emailId,password}=req.body;
+        const user=await User.findOne({emailId});
+        if(!user){
+            return res.status(400).send("Invalid email or password");
+        }
+        const isMatch=await bcrypt.compare(password,user.password);
+        if(!isMatch){
+            return res.status(400).send("Invalid email or password");
+        }
+        res.send("Login successful");
+    }catch(err){
+        return res.status(500).send("Error logging in user");
+    }
+})
 app.get("/users",async(req,res)=>{
     try{
         const users=await User.find({emailId:req.body.emailId});
