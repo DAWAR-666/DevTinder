@@ -19,4 +19,16 @@ const validateUser=(user)=>{
         throw new Error('Password is not strong enough');
     }
 }
-module.exports={validateUser};
+const validateProfileEdit=(req)=>{
+    const allowedEdits=[
+        'firstName',
+        'lastName',
+        'age',
+        'gender'
+    ]
+    const isValid=Object.keys(req.body).every((field)=>
+        allowedEdits.includes(field)
+    )
+    return isValid 
+}
+module.exports={validateUser,validateProfileEdit};
