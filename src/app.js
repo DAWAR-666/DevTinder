@@ -31,12 +31,12 @@ app.post("/login",async(req,res)=>{
         if(!user){
             return res.status(400).send("Invalid email or password");
         }
-        const isMatch=await bcrypt.compare(password,user.password);
+        const isMatch=await ispasswordValid(password);
         if(!isMatch){
             return res.status(400).send("Invalid email or password");
         }
         
-        const token=jwt.sign({_id:user._id},process.env.JWT_SECRET);
+        const token=await user.getjwt();
         res.cookie("token",token,{expires:new Date(Date.now()+8*3600000)});
         res.send("Login successful");
     }catch(err){
