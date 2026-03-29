@@ -37,7 +37,7 @@ app.post("/login",async(req,res)=>{
         }
         
         const token=jwt.sign({_id:user._id},process.env.JWT_SECRET);
-        res.cookie("token",token);
+        res.cookie("token",token,{expires:new Date(Date.now()+8*3600000)});
         res.send("Login successful");
     }catch(err){
         return res.status(500).send("Error logging in user");
