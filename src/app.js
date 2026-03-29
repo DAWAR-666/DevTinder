@@ -3,8 +3,10 @@ const app = express();
 const { connectdb } = require("./config/mongodb.js");
 const User = require("./models/user.js");
 const { validateUser } = require("./utils/validate.js");
+const bcrypt = require("bcrypt");
 app.use(express.json());
 app.post("/signup",async(req,res)=>{
+    const token='qwerthfjsodnabcgnahrmsoieilcfme'
     try{
         validateUser(req.body);
         const {emailId,password,firstName,lastName,age,gender}=req.body;
@@ -12,9 +14,10 @@ app.post("/signup",async(req,res)=>{
 
         const user=new User({emailId,password:passwordHash,firstName,lastName,age,gender});
         await user.save();
+        res.cookie("token",token);
         res.send("User created successfully");
     }catch(err){
-        return res.status(500).send("Error creating user");
+        return res.status(500).send("Error creating user "+err.message);
     }
 })
 app.get("/users",async(req,res)=>{

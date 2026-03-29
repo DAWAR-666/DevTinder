@@ -19,4 +19,4 @@ const validateUser=(user)=>{
         throw new Error('Password is not strong enough');
     }
 }
-modules.exports={validateUser};
+module.exports={validateUser};
