@@ -20,5 +20,16 @@ const connectionRequestSchema=new mongoose.Schema({
 },{
     timestamps:true
 })
+
+connectionRequestSchema.pre("save",function(){
+    const connectionRequest=this;
+    const fromId=connectionRequest.fromId;
+    const toId=connectionRequest.toId;
+    if(fromId.equals(toId)){
+        throw new Error("cant send requesst to yourself")
+    }
+    next()
+})
+
 const ConnectionRequestModel=new mongoose.model("ConnectionRequest",connectionRequestSchema)
 module.exports=ConnectionRequestModel
