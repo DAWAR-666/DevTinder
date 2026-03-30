@@ -28,5 +28,26 @@ profileRouter.patch("/profile/edit",userAuth,async(req,res)=>{
         return res.status(400).send("error updating the details "+err.message)
     }
 })
+profileRouter.patch("/profile/password",userAuth,async(req,res)=>{
+    try{
+        const Allowed=["emailId","currentPassword","newPassword"]
+
+        const isValid=Object.keys(req.body).every((field)=>{
+            Allowed.includes(field)
+        })
+        if(!isValid){throw new Error('invalid edit request')}
+        const user=req.user;
+        const isPasswordSame=await bcrypt.compare(req.body.currentPassword,user.password)
+        if(!isPasswordSame){
+            throw new Error('current password is incorrect')
+        }
+        const passwordHash=await bcrypt.hash(req.body.newPassword,10);
+        user.password=passwordHash
+        await user.save()
+        res.send(`${user.firstName}, your password is updated!`)
+    }catch(err){
+        return res.status(400).send("error "+err.message)
+    }
+})
 
 module.exports=profileRouter
