@@ -2,12 +2,17 @@ const express=require('express')
 const requestRouter=express()
 const ConnectionRequest=require('../models/connectionRequest.js')
 const {userAuth}=require('../middleware/auth.js')
-
+const User=require('../models/user.js')
 requestRouter.post("/request/send/:status/:toId",userAuth,async(req,res)=>{
     try{
         const Status=['ignored','interested']
         const fromId=req.user._id
         const toId=req.params.toId
+        const toIdExists=await User.findById(toId);
+        if(!toIdExists){
+            return res.status(400).json({message:"user not found"})
+        }
+
         const status=req.params.status
         if(!Status.includes(status)){
             return res.status(400).send('invalid connection request')
@@ -18,6 +23,9 @@ requestRouter.post("/request/send/:status/:toId",userAuth,async(req,res)=>{
                 {fromId:toId,toId:fromId}
             ]
         })
+        if(requestExists){
+            return res.status(400).json({message:'request already exists'})
+        }
         const connectionRequest=new ConnectionRequest({
             fromId,toId,status
         })
