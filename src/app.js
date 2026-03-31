@@ -8,9 +8,12 @@ app.use(cookieParser());
 app.use(express.json());
 const authRouter=require('./routes/auth.js')
 const profileRouter=require('./routes/profile.js')
-
+const connectionRequest=require('./routes/connectionRequest.js')
+const user=require('./routes/user.js')
 app.use('/',authRouter)
 app.use('/',profileRouter)
+app.use('/',connectionRequest)
+app.use('/',user)
 
 connectdb()
   .then(() => {
