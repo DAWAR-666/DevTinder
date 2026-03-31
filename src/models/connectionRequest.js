@@ -20,7 +20,7 @@ const connectionRequestSchema=new mongoose.Schema({
 },{
     timestamps:true
 })
-
+connectionRequestSchema.index({fromId:1,toId:1})
 connectionRequestSchema.pre("save",function(){
     const connectionRequest=this;
     const fromId=connectionRequest.fromId;
