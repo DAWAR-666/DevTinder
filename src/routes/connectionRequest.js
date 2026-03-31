@@ -38,3 +38,26 @@ requestRouter.post("/request/send/:status/:toId",userAuth,async(req,res)=>{
         res.status(400).json({message:"error:"+err.message})
     }
 })
+requestRouter.post("/request/review/:status/:requestId",userAuth,async(req,res)=>{
+    try{const allowedStatus=['accepted','rejected']
+    const {status,requestId}=req.params
+    if(!allowedStatus.includes(status)){
+        return res.status(404).json({message:'request invalid'})
+    }
+    const loggenInUser=req.user
+    const request=ConnectionRequest.fondOne({
+        _id:requestId,
+        toId:loggenInUser._id,
+        status:'interested'
+    })
+    if(!request){
+        return res.status(404).json({message:'request not found'})
+    }
+    request.status=status;
+    const data=await request.save()
+    res.json({message:'request '+status,
+        data
+    })}catch(err){
+        res.status(404).json({message:'error: '+err.message})
+    }
+})
