@@ -3,7 +3,7 @@ const app = express();
 const { connectdb } = require("./config/mongodb.js");
 const cookieParser = require("cookie-parser");
 
-
+app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 const authRouter=require('./routes/auth.js')
