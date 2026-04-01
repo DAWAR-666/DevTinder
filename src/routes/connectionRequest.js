@@ -61,3 +61,4 @@ requestRouter.post("/request/review/:status/:requestId",userAuth,async(req,res)=
         res.status(404).json({message:'error: '+err.message})
     }
 })
+module.exports=requestRouter
