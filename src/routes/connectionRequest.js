@@ -1,5 +1,5 @@
 const express=require('express')
-const requestRouter=express()
+const requestRouter=express.Router()
 const ConnectionRequest=require('../models/connectionRequest.js')
 const {userAuth}=require('../middleware/auth.js')
 const User=require('../models/user.js')

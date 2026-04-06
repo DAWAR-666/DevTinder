@@ -1,8 +1,8 @@
 const express=require('express')
-const userRouter=express()
+const userRouter=express.Router()
 const {userAuth}=require('../middleware/auth')
 const ConnectionRequest=require('../models/connectionRequest')
-const USER_SAFE_DATA='firstName lastName age gender'
+const USER_SAFE_DATA='firstName lastName age gender skills photoUrl about'
 const User=require('../models/user.js')
 userRouter.get('/user/requests/received',userAuth,async(req,res)=>{
     try{
@@ -25,19 +25,19 @@ userRouter.get('/user/requests/received',userAuth,async(req,res)=>{
 userRouter.get('/user/requests/connection',userAuth,async(req,res)=>{
     try{
         const loggedInUser=req.user
-        const connections=ConnectionRequest.find({
+        const connections=await ConnectionRequest.find({
             $or:[
                 {toId:loggedInUser._id,status:'accepted'},
                 {fromId:loggedInUser._id,status:'accepted'}
             ],
         }).populate('fromId',USER_SAFE_DATA).populate('toId',USER_SAFE_DATA)
         const data=connections.map((row)=>{
-            if(row.fromId.toString()===loggedInUse._id.toString()){
+            if(row.fromId._id.toString()===loggedInUser._id.toString()){
                 return row.toId
             }
             return row.fromId;
         })
-        res.json({message:'data fetcehed successfully',data})
+        res.json({message:'data fetched successfully',data})
     }catch(err){
         res.status(400).send('Error: '+err.message)
     }

@@ -1,5 +1,5 @@
 const express=require('express')
-const authRouter=express();
+const authRouter=express.Router();
 const { validateUser } = require("../utils/validate.js");
 const bcrypt = require("bcrypt");
 const User = require("../models/user.js");
@@ -7,10 +7,10 @@ const User = require("../models/user.js");
 authRouter.post("/signup",async(req,res)=>{
     try{
         validateUser(req.body);
-        const {emailId,password,firstName,lastName,age,gender}=req.body;
+        const {emailId,password,firstName,lastName,age,gender,photoUrl,about,skills}=req.body;
         const passwordHash=await bcrypt.hash(password,10);
 
-        const user=new User({emailId,password:passwordHash,firstName,lastName,age,gender});
+        const user=new User({emailId,password:passwordHash,firstName,lastName,age,gender,photoUrl,about,skills});
         await user.save();
         res.send("User created successfully");
     }catch(err){

@@ -1,5 +1,5 @@
 const express=require('express')
-const profileRouter=express();
+const profileRouter=express.Router();
 const {userAuth}=require('../middleware/auth')
 const {validateProfileEdit}=require ('../utils/validate.js')
 
