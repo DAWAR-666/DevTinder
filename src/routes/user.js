@@ -53,7 +53,7 @@ userRouter.get('/user/feed',userAuth,async(req,res)=>{
                 {toId:loggedInUser._id}
             ]
         }).select('fromId toId')
-        const hiddenRequests=new set()
+        const hiddenRequests=new Set()
         connectionRequests.forEach((req)=>{
             hiddenRequests.add(fromId)
             hiddenRequests.add(toId)
